@@ -1,0 +1,123 @@
+﻿@using System.Activities.Expressions
+@using SalesManagementSystem.Models
+@model SalesManagementSystem.Models.Item
+@{
+    List<Item> salesItems = ViewBag.SalesItems;
+}
+
+@using (Html.BeginForm())
+{
+
+    <div>
+        @Html.ValidationSummary(true)
+        <h4>@ViewBag.Message</h4>
+        <table>
+            <tr>
+                <td>
+                    @Html.LabelFor(x => x.ItemId)
+                </td>
+                <td>
+                    @Html.LabelFor(x => x.Price)
+                </td>
+                <td>
+                    @Html.LabelFor(x => x.Quantity)
+                </td>
+                <td>
+                    @Html.LabelFor(x => x.Total)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.DropDownListFor(x => x.ItemId, new SelectList(ViewBag.Items, "Value", "Text"))
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => x.Price, new{style="width: 100px"})
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => x.Quantity, new { style = "width: 100px" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => x.Total, new { style = "width: 100px", @readonly = "readonly" })
+                </td>
+                <td>
+                    <input type="submit" value="Add" name="action:Save" class="btn btn-default"/>
+                </td>
+            </tr>
+        </table>
+        <br/>
+        <table id="example" class="display" style="width:60%">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Action</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                @foreach (Item item in salesItems)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.Price</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.Total</td>
+                        <td>
+                            <a>Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+}
+
+<link href="~/Content/jquery.dataTables.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-3.5.1.js"></script>
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable();
+    });
+
+        $("#ItemId").change(function () {
+            var itemId = $("#ItemId").val();
+            var json = { itmId: itemId };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetSelectedItem", "Sale")',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(json),
+                success: function (data) {
+                    $("#Price").empty();
+                    $("#Quantity").empty();
+                    $("#Total").empty();
+                    $("#Price").val(data.Price);
+                    $("#Quantity").val(1);
+                    var qty = $("#Quantity").val();
+                    $("#Total").val(data.Price * qty);
+                }
+            });
+
+        });
+        $("#Quantity").change(function() {
+            var quantity = $("#Quantity").val();
+            var price = $("#Price").val();
+            //quantity = isNaN(quantity) || quantity == "" ? 1 : quantity;
+            //price = isNaN(price) || price == "" ? 0 : price;
+            $("#Total").val((quantity) * (price));
+        });
+
+    
+</script>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    
+}
+
+

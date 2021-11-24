@@ -1,0 +1,72 @@
+﻿@using SalesManagementSystem.Models
+@model List<SalesManagementSystem.Models.Sale>
+@{
+    //List<Sale> salesList = ViewBag.SalesList;
+    int count = 1;
+}
+
+<div>
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>Sales List</legend>
+        <h4>@ViewBag.Message</h4>
+        <table id="example" class="display" style="width:80%">
+            <thead>
+                <tr>
+                    <th>SL</th>
+                    <th>Customer</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                    <th>Total</th>
+                    <th>Paid</th>
+                    <th>Due</th>
+                    <th>Action</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                @foreach (Sale sale in Model)
+                {
+                    <tr>
+                        <td>@count @{count++; }</td>
+                        <td>@sale.CustomerName</td>
+                        <td>@sale.CustomerPhone</td>
+                        <td>@sale.CustomerAddress</td>
+                        <td>@sale.TotalPrice</td>
+                        <td>@sale.Paid</td>
+                        <td>@sale.Due</td>
+                        <td>
+                            <a>View</a>
+                            <a>Edit</a>
+                            <a>Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </fieldset>
+
+</div>
+
+
+
+
+@*<link href="~/Content/jquery.dataTables.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-3.5.1.js"></script>
+<script src="~/Scripts/jquery.dataTables.min.js"></script>*@
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable();
+    });
+
+</script>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+}
+
+

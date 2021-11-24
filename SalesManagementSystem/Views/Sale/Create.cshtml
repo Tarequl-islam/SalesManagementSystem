@@ -1,0 +1,112 @@
+﻿@using System.Web.UI.WebControls
+@model SalesManagementSystem.Models.Sale
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Sales Create</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+        <fieldset>
+            <legend>Sales Header</legend>
+            <div class="form-group">
+                @Html.LabelFor(model => model.CustomerName, new {@class = "control-label col-md-2"})
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.CustomerName)
+                    @Html.ValidationMessageFor(model => model.CustomerName)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CustomerPhone, new {@class = "control-label col-md-2"})
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.CustomerPhone)
+                    @Html.ValidationMessageFor(model => model.CustomerPhone)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CustomerAddress, new {@class = "control-label col-md-2"})
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.CustomerAddress)
+                    @Html.ValidationMessageFor(model => model.CustomerAddress)
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Sales Items</legend>
+            <div>
+                @Html.Partial("Save")
+                
+            </div>
+
+        </fieldset>
+
+        <fieldset>
+            <legend>Sales Summary</legend>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.TotalPrice, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <input id="TotalPrice" name="TotalPrice" readonly="readonly" type="text" value= @ViewBag.TotalPrice>
+                    @Html.ValidationMessageFor(model => model.TotalPrice)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Paid, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Paid)
+                    @Html.ValidationMessageFor(model => model.Paid)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Due, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Due, new { @readonly = "readonly" })
+                    @Html.ValidationMessageFor(model => model.Due)
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" name="action:Create" class="btn btn-default" />
+            </div>
+        </div>
+        <h4>@ViewBag.MessageSale</h4>
+</div>
+}
+
+<script src="~/Scripts/jquery-3.5.1.js"></script>
+@*<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>*@
+
+<script>
+    
+    $(document).ready(function() {
+        var totalPrice = $("#TotalPrice").val();
+        $("#Paid").val(0);
+        var paidValue = $("#Paid").val();
+        $("#Due").val(totalPrice-paidValue);
+    });
+
+    $("#Paid").change(function () {
+        var totalPrice = $("#TotalPrice").val();
+        var paidValue = $("#Paid").val();
+        $("#Due").val(totalPrice - paidValue);
+    });
+
+</script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
